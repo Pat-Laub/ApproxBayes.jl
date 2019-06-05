@@ -41,7 +41,7 @@ function smcweights(particles, oldparticles, prior, kernel::Kernel)
   for i in 1:length(particles)
     numerator = priorprob(particles[i].params, prior)
     denominator = 0.0
-    for j in 1:length(particles)
+    for j in 1:length(oldparticles)
       denominator = denominator + kernelprob(particles[i], oldparticles[j], kernel)
     end
     weights[i] = numerator / (oldparticles[i].weight * denominator)

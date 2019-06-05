@@ -219,12 +219,19 @@ function runabc(ABCsetup::ABCSMC, targetdata; verbose = false, progress = false,
 
         atomic_add!(its,1)
       end
+      i = i[]
+      its = its[]
 
       # Remove particles that are still #undef and corresponding distances
       idx = [isassigned(particles,ii) for ii in eachindex(particles)]
-      particles = particles[idx][1:ABCsetup.nparticles]
-      distvec = distvec[idx][1:ABCsetup.nparticles]
-      its = its[]
+      particles = particles[idx]
+      distvec = distvec[idx]
+      if i >= ABCsetup.nparticles
+          particles = particles[1:ABCsetup.nparticles]
+          distvec = distvec[1:ABCsetup.nparticles]
+      else
+          @warn("Only accepted $i particles (instead of $(ABCsetup.nparticles)) with ϵ < $ϵ. \n\tIncrease maxiterations ")
+      end
 
     else
       particles = Array{ParticleSMC}(undef, ABCsetup.nparticles)
