@@ -22,7 +22,7 @@ function runabc(ABCsetup::ABCRejection, targetdata; progress = false, verbose = 
     distvec = zeros(Float64, ABCsetup.maxiterations) #store distances in an array
     i = Atomic{Int64}(0)
     cntr = Atomic{Int64}(0)
-    @threads for its = 1:ABCsetup.maxiterations
+    @distributed for its = 1:ABCsetup.maxiterations
 
       if i[] > ABCsetup.nparticles
         break
@@ -191,7 +191,7 @@ function runabc(ABCsetup::ABCSMC, targetdata; verbose = false, progress = false,
       i = Atomic{Int64}(0)
       its = Atomic{Int64}(0)
 
-      @threads for ii = 1:ABCsetup.maxiterations
+      @distributed for ii = 1:ABCsetup.maxiterations
 
         if i[] > ABCsetup.nparticles
           break
