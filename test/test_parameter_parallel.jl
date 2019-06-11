@@ -21,7 +21,7 @@ setup = ABCRejection(getnormal,
   2,
   0.1,
   Prior([Uniform(0.0, 20.0), Uniform(0.0, 2.0)]);
-  maxiterations = 10^6,
+  maxsimulations = 10^6,
   )
 # run ABC inference
 resrejection = runabc(setup, targetdata, parallel=true);
@@ -90,9 +90,9 @@ setup = ABCRejection(getnormal,
   2,
   0.1,
   Prior([Uniform(0.0, 20.0), Uniform(0.0, 2.0)]);
-  maxiterations = 10^3,
+  maxsimulations = 10^3,
   )
 # run ABC inference
 resrejection = runabc(setup, targetdata, parallel=true);
 
-@test resrejection.numsims == setup.maxiterations
+@test resrejection.numsims == setup.maxsimulations

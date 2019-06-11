@@ -57,11 +57,11 @@ cst = [[i] for i in 1:2]
 
 ABCsetupsmc = ABCSMCModel([poissonsimulator, geometricsimulator], [1, 1], 1.0,
 [Prior([Exponential(1)]), Prior([Uniform(0.0, 1.0)])];
-nparticles = 500, maxiterations = 10^7)
+nparticles = 500, maxsimulations = 10^7)
 
 ABCsetuprej = ABCRejectionModel([poissonsimulator, geometricsimulator], [1, 1], 1.0,
 [Prior([Exponential(1)]), Prior([Uniform(0.0, 1.0)])];
-nparticles = 500, maxiterations = 10^7)
+nparticles = 500, maxsimulations = 10^7)
 
 td, pM1 = generatedata()
 

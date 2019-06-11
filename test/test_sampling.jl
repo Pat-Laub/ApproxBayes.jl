@@ -12,7 +12,7 @@ end
 Random.seed!(1234)
 targetdata = rand(Normal(3.5, 0.44), 100)
 
-ABCsetup = ABCSMCModel([getnormal, getuniformdist, getnormal], [2, 2, 2], 0.1, [Prior([Uniform(0.0, 20.0), Uniform(0.0, 2.0)]), Prior([Uniform(0.0, 20.0), Uniform(0.0, 2.0)]), Prior([Uniform(0.0, 20.0), Uniform(0.0, 2.0)])]; nparticles = 100, maxiterations = 10^5)
+ABCsetup = ABCSMCModel([getnormal, getuniformdist, getnormal], [2, 2, 2], 0.1, [Prior([Uniform(0.0, 20.0), Uniform(0.0, 2.0)]), Prior([Uniform(0.0, 20.0), Uniform(0.0, 2.0)]), Prior([Uniform(0.0, 20.0), Uniform(0.0, 2.0)])]; nparticles = 100, maxsimulations = 10^5)
 
 #test model perturbation kernel
 Niterations = 10^6
@@ -47,10 +47,10 @@ end
 ABCrejresults = runabc(ABCRejectionModel(
           map(x -> x.simfunc, ABCsetup.Models),
           map(x -> x.nparams, ABCsetup.Models),
-          ABCsetup.Models[1].ϵ1,
+          ABCsetup.ϵ1,
           map(x -> x.prior, ABCsetup.Models);
-          nparticles = ABCsetup.Models[1].nparticles,
-          maxiterations = ABCsetup.Models[1].maxiterations),
+          nparticles = ABCsetup.nparticles,
+          maxsimulations = ABCsetup.maxsimulations),
           targetdata);
 
 oldparticles, weightsA = ApproxBayes.setupSMCparticles(ABCrejresults, ABCsetup)
@@ -64,7 +64,7 @@ for i in 1:ABCsetup.nmodels
 end
 
 #test get proposal function
-ABCsetup = ABCSMC(getnormal, 2, 0.1, Prior((Uniform(0.0, 20.0), Exponential(1.0))); nparticles = 100, maxiterations = 10^5)
+ABCsetup = ABCSMC(getnormal, 2, 0.1, Prior((Uniform(0.0, 20.0), Exponential(1.0))); nparticles = 100, maxsimulations = 10^5)
 Niterations = 10^6
 p1 = zeros(Float64, Niterations)
 p2 = zeros(Float64, Niterations)
@@ -76,7 +76,7 @@ end
 
 #test get proposal function with models with different Priors
 ABCsetup = ABCSMCModel([getnormal, getuniformdist], [2, 2], 1.0,
-[Prior([Exponential(1), Uniform(0.0, 1.0)]), Prior([Uniform(0.0, 3.0), Normal(2.0, 0.1)])]; nparticles = 100, maxiterations = 10^5)
+[Prior([Exponential(1), Uniform(0.0, 1.0)]), Prior([Uniform(0.0, 3.0), Normal(2.0, 0.1)])]; nparticles = 100, maxsimulations = 10^5)
 Niterations = 10^6
 p1 = Float64[]
 p2 = Float64[]
