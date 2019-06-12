@@ -250,10 +250,10 @@ function runabc(ABCsetup::ABCSMC, targetdata; verbose = false, progress = false,
     else
       particles = Array{ParticleSMC}(undef, ABCsetup.nparticles)
       distvec = zeros(Float64, ABCsetup.nparticles)
-      i = 1 #set particle indicator to 1
-      its = 1
+      i = 0
+      its = 0
       priorits = 0
-      while i < ABCsetup.nparticles + 1
+      while i < ABCsetup.nparticles
         j = wsample(1:ABCsetup.nparticles, weights)
         particle = oldparticles[j]
         newparticle = perturbparticle(particle, ABCsetup.kernel)
@@ -265,21 +265,23 @@ function runabc(ABCsetup::ABCSMC, targetdata; verbose = false, progress = false,
 
         #simulate with new parameters
         dist, out = ABCsetup.simfunc(newparticle.params, ABCsetup.constants, targetdata)
+        its += 1
 
         #if simulated data is less than target tolerance accept particle
         if dist < ϵ
+          i += 1
           particles[i] = newparticle
           particles[i].other = out
           particles[i].distance = dist
           distvec[i] = dist
-          i += 1
           if progress
             next!(p)
           end
         end
-        its += 1
 
         if its >= ABCsetup.maxsimulations
+          particles = particles[1:i]
+          distvec = distvec[1:i]
           break
         end
       end
